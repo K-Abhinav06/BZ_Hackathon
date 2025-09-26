@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 
 function ProblemSearch() {
   const [description, setDescription] = useState('');
@@ -21,7 +22,7 @@ function ProblemSearch() {
       setResults(data?.results || []);
       setMessage(data?.message || (data?.results?.length ? '' : 'No similar problems found.'));
     } catch (err) {
-      setMessage('Error searching problems.');
+      setMessage('Error searching problems.', err);
     } finally {
       setLoading(false);
     }
@@ -48,12 +49,15 @@ function ProblemSearch() {
       </form>
       <div className="mt-6">
         {message && <p className="text-gray-700 mb-4">{message}</p>}
-        <ul className="space-y-4">
+        <ul className={`space-y-4 ${results.length ? 'h-96' : ''} overflow-y-auto`}>
           {results?.map((problem, idx) => (
             <li key={idx} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold text-gray-900">{problem?.title || 'Untitled'}</span>
                 <span className="text-sm px-2 py-1 rounded bg-blue-100 text-blue-700 font-medium">{problem?.difficulty || 'Unknown'}</span>
+              </div>
+              <div>
+                <p className="mt-2 text-gray-800">{problem?.description || 'No description available.'}</p>
               </div>
               <div className="mt-2 text-gray-600 text-sm">
                 Tags: {problem?.tags?.length ? problem.tags.join(', ') : 'None'}
