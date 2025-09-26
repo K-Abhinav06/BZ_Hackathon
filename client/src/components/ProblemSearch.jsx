@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
 
 function ProblemSearch() {
   const [description, setDescription] = useState('');
   const [results, setResults] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [useLLM, setUseLLM] = useState(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -16,7 +16,7 @@ function ProblemSearch() {
       const res = await fetch('http://localhost:3000/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description }),
+        body: JSON.stringify({ description, useLLM }),
       });
       const data = await res.json();
       setResults(data?.results || []);
@@ -31,6 +31,15 @@ function ProblemSearch() {
   return (
     <div className="w-full max-w-xl mx-auto bg-white rounded-xl shadow-md p-8 mt-10">
       <form onSubmit={handleSearch} className="flex flex-col gap-4">
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <input
+            type="checkbox"
+            checked={useLLM}
+            onChange={e => setUseLLM(e.target.checked)}
+            className="accent-blue-600 h-4 w-4"
+          />
+          Use LLM (AI-powered search)
+        </label>
         <textarea
           value={description}
           onChange={e => setDescription(e.target.value)}

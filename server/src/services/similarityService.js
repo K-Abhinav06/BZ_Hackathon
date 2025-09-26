@@ -1,6 +1,5 @@
-import { problems } from '../data/problems.js';
 
-export function findSimilarProblems(inputDescription) {
+export function findSimilarProblems(inputDescription, problems) {
     const input = inputDescription.trim().toLowerCase();
 
     const scored = problems.map(problem => {
@@ -21,7 +20,7 @@ export function findSimilarProblems(inputDescription) {
             if (title.indexOf(input) === 0) score += 1; // Bonus for starting match
         }
 
-        return { ...problem, score, position };
+        return { ...problem._doc ? problem._doc : problem, score, position };
     });
 
     return scored
